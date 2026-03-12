@@ -108,33 +108,43 @@
 // export default Home
 'use client'
 import React, { useState,useEffect } from 'react'
-import Dashboard from './dashboard/page'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import register from '@/utils/register'
+import login from '@/utils/login'
 
 const Home = () => {  
 const router = useRouter()
-const [isUserLogin, setIsUserLogin] = useState(false)
-const [userIdd, setuserIdd] = useState('')
+const [userId, setuserId] = useState('')
 const [username, setUsername] = useState('')
 const [hashpass, setHashpass] = useState('')
 
-const handleSubmit = ()=>{
+const handleSubmit = async(e)=>{
+  e.preventDefault()
+
+  const action = e.nativeEvent.submitter.value
+  if (action === "login") {
+    const res = await login(username,hashpass)
+    console.log(res.user.id,res.user.username)
+  }
+
+  if (action === "register") {
+   const  res = await register(username,hashpass)
+   setuserId(res.userId)
+   localStorage.setItem('userId',res.userId)
+  }
 
 }
   useEffect(() => {
   
-    const storedUsername = localStorage.getItem('username')
-    const storedpassword = localStorage.getItem('hashpass')
-
-    if(storedUsername && storedpassword){
+    const storedUsername = localStorage.getItem('userId')
+  localStorage.removeItem('userId')
+    if(storedUsername ){
         setUsername(storedUsername)
-        setHashpass(storedpassword)
         router.push('/dashboard')
-        setIsUserLogin(true)
       }
 
-  
+
 
   }, [])
 
@@ -143,12 +153,18 @@ const handleSubmit = ()=>{
   return (
     <div>
       <form onSubmit={handleSubmit} className='space-y-4'>
-<div>        <input typeof='text' placeholder='enter username' value={username} onChange={(e)=> setUsername(e.target.value)}></input>
+<div>        <input type='text' placeholder='enter username' value={username} onChange={(e)=> setUsername(e.target.value)}></input>
 </div>
 <div>
-          <input typeof='text' placeholder='enter password' value={hashpass} onChange={(e)=>setHashpass(e.target.value)}></input>
+          <input type='password' placeholder='enter password' value={hashpass} onChange={(e)=>setHashpass(e.target.value)}></input>
 </div>    
-<Button type='submit' >Submit</Button> </form>
+  <Button type="submit" name="action" value="login">
+    Login
+  </Button>
+
+  <Button type="submit" name="action" value="register">
+    Register
+  </Button> </form>
     </div>
   )
 }
