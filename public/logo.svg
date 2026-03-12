@@ -1,0 +1,29 @@
+<svg width="300" height="300" viewBox="0 0 300 300"
+     xmlns="http://www.w3.org/2000/svg"
+     fill="none">
+
+  <!-- Gradient Definition -->
+  <defs>
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00ff88"/>
+      <stop offset="100%" stop-color="#00cc66"/>
+    </linearGradient>
+  </defs>
+
+  <!-- TT Signature Stroke -->
+  <path d="
+    M30 90
+    H150
+    M90 90
+    V210
+    L160 90
+    H270
+    M210 90
+    V210
+  "
+    stroke="url(#greenGrad)"
+    stroke-width="14"
+    stroke-linecap="square"
+    stroke-linejoin="miter"/>
+
+</svg>
