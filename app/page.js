@@ -115,9 +115,9 @@ import login from '@/utils/login'
 
 const Home = () => {  
 const router = useRouter()
-const [userId, setuserId] = useState('')
 const [username, setUsername] = useState('')
 const [hashpass, setHashpass] = useState('')
+const [userId, setUserId] = useState(null)
 
 const handleSubmit = async(e)=>{
   e.preventDefault()
@@ -126,27 +126,35 @@ const handleSubmit = async(e)=>{
   if (action === "login") {
     const res = await login(username,hashpass)
     console.log(res.user.id,res.user.username)
+       localStorage.setItem('userId',res.user.id)
+       console.log(res.user.Id)
+       console.log("user id saved")
+               router.push('/dashboard')
   }
 
   if (action === "register") {
    const  res = await register(username,hashpass)
-   setuserId(res.userId)
    localStorage.setItem('userId',res.userId)
+   console.log(res.userId)
+           router.push('/dashboard')
   }
 
 }
   useEffect(() => {
   
-    const storedUsername = localStorage.getItem('userId')
-  localStorage.removeItem('userId')
-    if(storedUsername ){
-        setUsername(storedUsername)
+    const storedUserId = localStorage.getItem('userId')
+    setUserId(storedUserId)
+  
+    console.log("userrrrr", userId)
+    if(storedUserId ){
         router.push('/dashboard')
       }
 
 
 
-  }, [])
+  }, [router])
+
+
 
 
   

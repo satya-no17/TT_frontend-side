@@ -1,41 +1,93 @@
 'use client'
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-
+import { useRouter } from "next/navigation"
+import retrieveData from "@/utils/retrieveData"
+import addTodo from "@/utils/addtodo"
+import deleteTodo from "@/utils/deleteTodo"
 const Tasks = () => {
 
+  const router = useRouter()
+  const [todos, setTodos] = useState([])
+  const [dailyTasks, setDailyTasks] = useState([])
+  const [goals, setGoals] = useState([])
+  const [addtodo, setaddtodo] = useState("")
+
+  // todos functionssssss
+  // adding todo
+
+  const addTodos = async () => {
+    try {
+      const userId = localStorage.getItem("userId")
+      const res = await addTodo(userId, addtodo)
+      console.log(res)
+      setTodos([...todos, res.todo])
+
+      // Clear input and close modal
+      setaddtodo("")
+      setinputboxTodo(false)
+    } catch (error) {
+      console.error("Error adding todo:", error)
+    }
+  }
+
+  // deleteing todo
+  const deleteTodos = async (id) => {
+    try {
+      const userId = localStorage.getItem("userId")
+      const res = await deleteTodo(userId, id)
+      console.log(res)
+   setTodos(prev => prev.filter(todo => todo.id !== id))
+
+    } catch (error) {
+      console.error("Error deleting todo:", error)
+    }
+  }
+
+
+
+
+
+
+
+  useEffect(() => {
+
+    // Check if running on client-side
+    if (typeof window === 'undefined') return
+
+    const userId = localStorage.getItem("userId")
+    console.log("userId:", userId)
+
+    if (!userId) {
+      router.push("/")
+      return
+    }
+    const loadDashboard = async () => {
+      try {
+        const res = await retrieveData(userId)
+        console.log("dashboard data:", res)
+        setDailyTasks(res.dailyTasks)
+        setGoals(res.goals)
+        setTodos(res.todos)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+
+
+    loadDashboard()
+  }, [])
   const [activeItem, setActiveItem] = useState(null)
   const [activeTodo, setActiveTodo] = useState(null)
   const [inputboxtodo, setinputboxTodo] = useState(false)
-  const tasks = {
-    daily: [
-      { id: 1, title: "Study Backend" },
-      { id: 2, title: "Workout" },
-      { id: 1, title: "Study Backend" },
-      { id: 2, title: "Workout" },
-      { id: 1, title: "Study Backend" },
-      { id: 2, title: "Workout" }
-    ],
 
-    monthly: [
-      { id: 1, title: "Finish Node Project" },
-      { id: 2, title: "Read 2 Books" }
-    ],
-
-    yearly: [
-      { id: 1, title: "Build 5 Portfolio Projects" },
-      { id: 2, title: "Learn System Design" }
-    ],
-
-    todo: [
-      { id: 1, title: "Buy groceries" },
-      { id: 2, title: "Clean desk" },
-      { id: 3, title: "Call friend" }
-    ]
-  }
   const Add_todo = () => {
     setinputboxTodo(true)
   }
+
+  const monthlyGoals = goals.filter(goal => goal.type === 'monthly')
+  const yearlyGoals = goals.filter(goal => goal.type === 'yearly')
 
   const Card = ({ title, items }) => {
 
@@ -101,38 +153,40 @@ const Tasks = () => {
 
   return (
     <>
-     {inputboxtodo && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+      {inputboxtodo && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
 
-    <div className="bg-white rounded-xl p-6 w-[400px] shadow-lg">
+          <div className="bg-white rounded-xl p-6 w-[400px] shadow-lg">
 
-      <h2 className="text-lg font-semibold mb-4">Add Todo</h2>
+            <h2 className="text-lg font-semibold mb-4">Add Todo</h2>
 
-      <input
-        type="text"
-        placeholder="Enter todo..."
-        className="w-full border rounded-lg p-2 mb-4"
-      />
+            <input
+              type="text"
+              placeholder="Enter todo..."
+              className="w-full border rounded-lg p-2 mb-4"
+              value={addtodo}
+              onChange={(e) => { setaddtodo(e.target.value) }}
+            />
 
-      <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-2">
 
-        <Button
-          variant="secondary"
-          onClick={() => setinputboxTodo(false)}
-        >
-          Cancel
-        </Button>
+              <Button
+                variant="secondary"
+                onClick={() => setinputboxTodo(false)}
+              >
+                Cancel
+              </Button>
 
-        <Button className="bg-[#3B82F6] text-white">
-          Add
-        </Button>
+              <Button className="bg-[#3B82F6] text-white" onClick={addTodos}>
+                Add
+              </Button>
 
-      </div>
+            </div>
 
-    </div>
+          </div>
 
-  </div>
-)}
+        </div>
+      )}
       <div className="p-8 bg-[#F8FAFC] min-h-screen">
 
         <h1 className="text-3xl font-semibold text-slate-800 mb-8">
@@ -143,9 +197,10 @@ const Tasks = () => {
 
         <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-6">
 
-          <Card title="Daily Goals" items={tasks.daily} />
-          <Card title="Monthly Goals" items={tasks.monthly} />
-          <Card title="Yearly Goals" items={tasks.yearly} />
+          <Card title="Daily Goals" items={dailyTasks} />
+          {/* <Card title="Monthly Goals" items={monthlyGoals} />
+          <Card title="Yearly Goals" items={yearlyGoals} /> */}
+
 
         </div>
 
@@ -168,7 +223,7 @@ const Tasks = () => {
 
           <div className="grid md:grid-cols-2 gap-4">
 
-            {tasks.todo.map(todo => (
+            {todos.map(todo => (
 
               <div
                 key={todo.id}
@@ -186,7 +241,10 @@ const Tasks = () => {
                       Edit
                     </Button>
 
-                    <Button size="sm" variant="destructive">
+                    <Button size="sm" variant="destructive"  onClick={(e) => {
+    e.stopPropagation()
+    deleteTodos(todo.id)
+  }}>
                       Delete
                     </Button>
 

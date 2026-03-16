@@ -1,4 +1,4 @@
-export default addTodo = async (user_id, title, completed = false) => {
+const addTodo = async (user_id, title, completed = false) => {
   try {
     const response = await fetch('http://localhost:5000/create/todo', {
       method: 'POST',
@@ -24,3 +24,4 @@ export default addTodo = async (user_id, title, completed = false) => {
     throw error
   }
 }
+export default addTodo
