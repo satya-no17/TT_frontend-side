@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation"
 import retrieveData from "@/utils/retrieveData"
 import addTodo from "@/utils/addtodo"
 import deleteTodo from "@/utils/deleteTodo"
+import { editTodo } from "@/utils/editTodo"
+
 const Tasks = () => {
 
   const router = useRouter()
@@ -12,6 +14,10 @@ const Tasks = () => {
   const [dailyTasks, setDailyTasks] = useState([])
   const [goals, setGoals] = useState([])
   const [addtodo, setaddtodo] = useState("")
+  const [editTodoModal, setEditTodoModal] = useState(false)
+  const [editingTodo, setEditingTodo] = useState(null)
+  const [editTitle, setEditTitle] = useState("")
+  const [editCompleted, setEditCompleted] = useState(false)
 
   // todos functionssssss
   // adding todo
@@ -43,8 +49,41 @@ const Tasks = () => {
       console.error("Error deleting todo:", error)
     }
   }
+//editing todo
+  const openEditModal = (todo) => {
+    setEditingTodo(todo)
+    setEditTitle(todo.title)
+    setEditCompleted(todo.completed || false)
+    setEditTodoModal(true)
+  }
+
+  const updateTodo = async () => {
+    try {
+      const userId = localStorage.getItem("userId")
+      const res = await editTodo(userId, editingTodo.id, { 
+        title: editTitle, 
+        completed: editCompleted 
+      })
+      console.log(res)
+      
+      if (res.success) {
+        setTodos(prev => prev.map(todo => 
+          todo.id === editingTodo.id 
+            ? { ...todo, title: editTitle, completed: editCompleted }
+            : todo
+        ))
+        setEditTodoModal(false)
+        setEditingTodo(null)
+      }
+    } catch (error) {
+      console.error("Error updating todo:", error)
+    }
+  }
 
 
+  // daily task functions
+
+  // adding daily tasks
 
 
 
@@ -78,6 +117,9 @@ const Tasks = () => {
 
     loadDashboard()
   }, [])
+
+
+  
   const [activeItem, setActiveItem] = useState(null)
   const [activeTodo, setActiveTodo] = useState(null)
   const [inputboxtodo, setinputboxTodo] = useState(false)
@@ -187,6 +229,52 @@ const Tasks = () => {
 
         </div>
       )}
+      {editTodoModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+
+          <div className="bg-white rounded-xl p-6 w-[400px] shadow-lg">
+
+            <h2 className="text-lg font-semibold mb-4">Edit Todo</h2>
+
+            <input
+              type="text"
+              placeholder="Enter todo title..."
+              className="w-full border rounded-lg p-2 mb-4"
+              value={editTitle}
+              onChange={(e) => setEditTitle(e.target.value)}
+            />
+
+            <div className="flex items-center gap-2 mb-4">
+              <input 
+                type="checkbox" 
+                id="completed"
+                checked={editCompleted}
+                onChange={(e) => setEditCompleted(e.target.checked)}
+              />
+              <label htmlFor="completed" className="text-slate-700">
+                Mark as completed
+              </label>
+            </div>
+
+            <div className="flex justify-end gap-2">
+
+              <Button
+                variant="secondary"
+                onClick={() => setEditTodoModal(false)}
+              >
+                Cancel
+              </Button>
+
+              <Button className="bg-[#3B82F6] text-white" onClick={updateTodo}>
+                Update
+              </Button>
+
+            </div>
+
+          </div>
+
+        </div>
+      )}
       <div className="p-8 bg-[#F8FAFC] min-h-screen">
 
         <h1 className="text-3xl font-semibold text-slate-800 mb-8">
@@ -226,18 +314,23 @@ const Tasks = () => {
             {todos.map(todo => (
 
               <div
-                key={todo.id}
+                key={todo?.id}
                 onClick={() => setActiveTodo(activeTodo === todo.id ? null : todo.id)}
                 className="bg-slate-50 p-4 rounded-lg hover:bg-slate-100 transition-all duration-200 cursor-pointer flex justify-between items-center"
               >
 
-                <p className="text-slate-700">{todo.title}</p>
-
-                {activeTodo === todo.id && (
+<div className="flex items-center gap-3">
+                  {/* <input type="checkbox" checked={todo?.completed || false} readOnly /> */}
+                  <p className={`${todo?.completed ? 'line-through text-slate-400' : 'text-slate-700'}`}>{todo?.title || "Untitled"}</p>
+                </div>
+                {activeTodo === todo?.id && (
 
                   <div className="flex gap-2 transition-all duration-200">
 
-                    <Button size="sm" variant="secondary">
+                    <Button size="sm" variant="secondary" onClick={(e) => {
+    e.stopPropagation()
+    openEditModal(todo)
+  }}>
                       Edit
                     </Button>
 

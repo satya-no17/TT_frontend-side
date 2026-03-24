@@ -1,16 +1,16 @@
-export const editTodo = async (userId, id, { title, completed }) => {
+export const editTodo = async (userId, id, { current_value }) => {
   try {
-    const response = await fetch(`http://localhost:5000/users/${userId}/todos/${id}`, {
+    const response = await fetch(`http://localhost:5000/users/${userId}/goals/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ title, completed }),
+      body: JSON.stringify({ current_value }),
     })
 
     if (!response.ok) {
       const error = await response.json()
-      throw new Error(error.error || 'Failed to update todo')
+      throw new Error(error.error || 'Failed to update goals')
     }
 
     const data = await response.json()
