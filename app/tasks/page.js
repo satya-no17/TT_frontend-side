@@ -6,18 +6,33 @@ import retrieveData from "@/utils/retrieveData"
 import addTodo from "@/utils/addtodo"
 import deleteTodo from "@/utils/deleteTodo"
 import { editTodo } from "@/utils/editTodo"
+import deleteDailyTask from "@/utils/deleteDailyTask"
+import { editDailyTask } from "@/utils/editDailyTask"
+import addDailyTask from "@/utils/addDailyTask"
 
 const Tasks = () => {
 
   const router = useRouter()
+
+
   const [todos, setTodos] = useState([])
-  const [dailyTasks, setDailyTasks] = useState([])
-  const [goals, setGoals] = useState([])
   const [addtodo, setaddtodo] = useState("")
   const [editTodoModal, setEditTodoModal] = useState(false)
   const [editingTodo, setEditingTodo] = useState(null)
   const [editTitle, setEditTitle] = useState("")
   const [editCompleted, setEditCompleted] = useState(false)
+
+  const [dailyTasks, setDailyTasks] = useState([])
+  const [addDailyInput, setAddDailyInput] = useState("")
+  const [showDailyModal, setShowDailyModal] = useState(false)
+  const [editDailyModal, setEditDailyModal] = useState(false)
+  const [editingDaily, setEditingDaily] = useState(null)
+  const [editDailyTitle, setEditDailyTitle] = useState("")
+  const [editDailyCompleted, setEditDailyCompleted] = useState(false)
+
+
+  const [goals, setGoals] = useState([])
+
 
   // todos functionssssss
   // adding todo
@@ -43,13 +58,13 @@ const Tasks = () => {
       const userId = localStorage.getItem("userId")
       const res = await deleteTodo(userId, id)
       console.log(res)
-   setTodos(prev => prev.filter(todo => todo.id !== id))
+      setTodos(prev => prev.filter(todo => todo.id !== id))
 
     } catch (error) {
       console.error("Error deleting todo:", error)
     }
   }
-//editing todo
+  //editing todo
   const openEditModal = (todo) => {
     setEditingTodo(todo)
     setEditTitle(todo.title)
@@ -60,15 +75,15 @@ const Tasks = () => {
   const updateTodo = async () => {
     try {
       const userId = localStorage.getItem("userId")
-      const res = await editTodo(userId, editingTodo.id, { 
-        title: editTitle, 
-        completed: editCompleted 
+      const res = await editTodo(userId, editingTodo.id, {
+        title: editTitle,
+        completed: editCompleted
       })
       console.log(res)
-      
+
       if (res.success) {
-        setTodos(prev => prev.map(todo => 
-          todo.id === editingTodo.id 
+        setTodos(prev => prev.map(todo =>
+          todo.id === editingTodo.id
             ? { ...todo, title: editTitle, completed: editCompleted }
             : todo
         ))
@@ -85,10 +100,66 @@ const Tasks = () => {
 
   // adding daily tasks
 
+  const addDailyTasks = async () => {
+    try {
+      const userId = localStorage.getItem("userId")
+      const res = await addDailyTask(userId, addDailyInput)
+      setDailyTasks(prev => [...prev, res.task]) // depends on backend response
 
+      setAddDailyInput("")
+      setShowDailyModal(false)
+    } catch (error) {
+      console.error("Error adding taskss:", error)
 
+    }
+  }
+  // deleting daily tasks 
 
+  const deleteDailyTasks = async (id) => {
+    try {
+      const userId = localStorage.getItem("userId")
+      const res = await deleteDailyTask(userId, id)
+      console.log(res)
+      setDailyTasks(prev => prev.filter(tasks => tasks.id !== id))
+    } catch (error) {
+      console.error("Error deleting dailyTask:", error)
+    }
+  }
 
+  //edit daily tasks
+
+  const openDailyEdit = (task) => {
+    setEditingDaily(task)
+    setEditDailyTitle(task.title)
+    setEditDailyCompleted(task.completed || false)
+    setEditDailyModal(true)
+  }
+
+  const updateDailyTasks = async () => {
+    try {
+      const userId = localStorage.getItem("userId")
+
+      const res = await editDailyTask(userId, editingDaily.id, {
+        title: editDailyTitle,
+        completed: editDailyCompleted
+      })
+
+      if (res.success) {
+        setDailyTasks(prev =>
+          prev.map(task =>
+            task.id === editingDaily.id
+              ? { ...task, title: editDailyTitle, completed: editDailyCompleted }
+              : task
+          )
+        )
+
+        setEditDailyModal(false)
+        setEditingDaily(null)
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
   useEffect(() => {
 
     // Check if running on client-side
@@ -119,7 +190,7 @@ const Tasks = () => {
   }, [])
 
 
-  
+
   const [activeItem, setActiveItem] = useState(null)
   const [activeTodo, setActiveTodo] = useState(null)
   const [inputboxtodo, setinputboxTodo] = useState(false)
@@ -131,7 +202,7 @@ const Tasks = () => {
   const monthlyGoals = goals.filter(goal => goal.type === 'monthly')
   const yearlyGoals = goals.filter(goal => goal.type === 'yearly')
 
-  const Card = ({ title, items }) => {
+  const Card = ({ title, items, onDelete, onEdit, onAdd }) => {
 
     return (
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 flex flex-col transition-all duration-300 hover:shadow-md">
@@ -139,7 +210,7 @@ const Tasks = () => {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-slate-800">{title}</h2>
 
-          <Button className="bg-[#3B82F6] hover:bg-[#2563EB] text-white" size="sm">
+          <Button className="bg-[#3B82F6] hover:bg-[#2563EB] text-white" size="sm" onClick={onAdd}>
             Add
           </Button>
         </div>
@@ -148,7 +219,7 @@ const Tasks = () => {
 
           {items.map(item => {
 
-            const key = `${title}-${item.id}`
+            const key = `${title}-${item?.id}`
 
             return (
 
@@ -160,18 +231,25 @@ const Tasks = () => {
 
                 <div className="flex items-center gap-3">
                   <input type="checkbox" />
-                  <p className="text-slate-700">{item.title}</p>
+                  <p className="text-slate-700">{item?.title}</p>
                 </div>
 
                 {activeItem === key && (
 
                   <div className="flex gap-2 transition-all duration-200">
 
-                    <Button size="sm" variant="secondary">
+                    <Button size="sm" variant="secondary"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        onEdit && onEdit(item)
+                      }}>
                       Edit
                     </Button>
 
-                    <Button size="sm" variant="destructive">
+                    <Button size="sm" variant="destructive" onClick={(e) => {
+                      e.stopPropagation()
+                      onDelete(item.id)
+                    }}>
                       Delete
                     </Button>
 
@@ -245,8 +323,8 @@ const Tasks = () => {
             />
 
             <div className="flex items-center gap-2 mb-4">
-              <input 
-                type="checkbox" 
+              <input
+                type="checkbox"
                 id="completed"
                 checked={editCompleted}
                 onChange={(e) => setEditCompleted(e.target.checked)}
@@ -275,6 +353,54 @@ const Tasks = () => {
 
         </div>
       )}
+      {editDailyModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+          <div className="bg-white p-6 rounded-xl w-[400px]">
+
+            <input
+              type="text"
+              value={editDailyTitle}
+              onChange={(e) => setEditDailyTitle(e.target.value)}
+              className="w-full border p-2 mb-4"
+            />
+
+            <label>
+              <input
+                type="checkbox"
+                checked={editDailyCompleted}
+                onChange={(e) => setEditDailyCompleted(e.target.checked)}
+              />
+              Completed
+            </label>
+
+            <div className="flex justify-end gap-2 mt-4">
+              <Button onClick={() => setEditDailyModal(false)}>Cancel</Button>
+              <Button onClick={updateDailyTasks}>Update</Button>
+            </div>
+
+          </div>
+        </div>
+      )}
+      {showDailyModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+          <div className="bg-white p-6 rounded-xl w-[400px]">
+
+            <input
+              type="text"
+              placeholder="Enter daily task"
+              value={addDailyInput}
+              onChange={(e) => setAddDailyInput(e.target.value)}
+              className="w-full border p-2 mb-4"
+            />
+
+            <div className="flex justify-end gap-2">
+              <Button onClick={() => setShowDailyModal(false)}>Cancel</Button>
+              <Button onClick={addDailyTasks}>Add</Button>
+            </div>
+
+          </div>
+        </div>
+      )}
       <div className="p-8 bg-[#F8FAFC] min-h-screen">
 
         <h1 className="text-3xl font-semibold text-slate-800 mb-8">
@@ -285,7 +411,8 @@ const Tasks = () => {
 
         <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-6">
 
-          <Card title="Daily Goals" items={dailyTasks} />
+          <Card title="Daily Goals" items={dailyTasks} onDelete={deleteDailyTasks} onEdit={openDailyEdit}
+            onAdd={() => setShowDailyModal(true)} />
           {/* <Card title="Monthly Goals" items={monthlyGoals} />
           <Card title="Yearly Goals" items={yearlyGoals} /> */}
 
@@ -319,7 +446,7 @@ const Tasks = () => {
                 className="bg-slate-50 p-4 rounded-lg hover:bg-slate-100 transition-all duration-200 cursor-pointer flex justify-between items-center"
               >
 
-<div className="flex items-center gap-3">
+                <div className="flex items-center gap-3">
                   {/* <input type="checkbox" checked={todo?.completed || false} readOnly /> */}
                   <p className={`${todo?.completed ? 'line-through text-slate-400' : 'text-slate-700'}`}>{todo?.title || "Untitled"}</p>
                 </div>
@@ -328,16 +455,16 @@ const Tasks = () => {
                   <div className="flex gap-2 transition-all duration-200">
 
                     <Button size="sm" variant="secondary" onClick={(e) => {
-    e.stopPropagation()
-    openEditModal(todo)
-  }}>
+                      e.stopPropagation()
+                      openEditModal(todo)
+                    }}>
                       Edit
                     </Button>
 
-                    <Button size="sm" variant="destructive"  onClick={(e) => {
-    e.stopPropagation()
-    deleteTodos(todo.id)
-  }}>
+                    <Button size="sm" variant="destructive" onClick={(e) => {
+                      e.stopPropagation()
+                      deleteTodos(todo.id)
+                    }}>
                       Delete
                     </Button>
 

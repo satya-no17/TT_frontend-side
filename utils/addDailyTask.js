@@ -1,18 +1,25 @@
 
-export default addDailyTask = async (user_id, title, completed = false) => {
+
+const addDailyTask = async (user_id, title, completed = false) => {
     try {
         const now = new Date()
 
-        const formatted = now.toLocaleDateString()
+        const formatted = new Date().toISOString().split('T')[0]
 
-        const response = await fetch('http://localhost:5000/create/daily_taks', {
+        const payload = {
+            user_id,
+            title,
+            completed,
+            date: formatted
+        }
+
+        console.log("SENDING:", payload)
+        const response = await fetch('http://localhost:5000/create/daily_task', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                user_id, title, completed, date: formatted
-            })
+            body: JSON.stringify(payload)
         })
         if (!response.ok) {
             const error = await response.json()
@@ -25,3 +32,5 @@ export default addDailyTask = async (user_id, title, completed = false) => {
         throw error
     }
 }
+
+export default addDailyTask

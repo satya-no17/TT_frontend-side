@@ -1,7 +1,7 @@
 const deleteDailyTask = async (userId, daily_tasksId) => {
   try {
     const response = await fetch(
-      `http://localhost:5000/users/${userId}/todos/${daily_tasksId}`,
+      `http://localhost:5000/users/${userId}/daily_tasks/${daily_tasksId}`,
       {
         method: "DELETE",
       }
@@ -9,13 +9,13 @@ const deleteDailyTask = async (userId, daily_tasksId) => {
 
     if (!response.ok) {
       const error = await response.json()
-      throw new Error(error.error || "Failed to delete todo")
+      throw new Error(error.error || "Failed to delete dailytask")
     }
 
     const data = await response.json()
     return data
   } catch (error) {
-    console.error("Error deleting todo:", error)
+    console.error("Error deleting daily task:", error)
     throw error
   }
 }
