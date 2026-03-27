@@ -1,4 +1,4 @@
-export const editTodo = async (userId, id, { current_value }) => {
+const editGoals = async (userId, id, { current_value }) => {
   try {
     const response = await fetch(`http://localhost:5000/users/${userId}/goals/${id}`, {
       method: 'PUT',
@@ -20,3 +20,4 @@ export const editTodo = async (userId, id, { current_value }) => {
     return { success: false, error: error.message }
   }
 }
+export default editGoals
