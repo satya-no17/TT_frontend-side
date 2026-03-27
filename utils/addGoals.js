@@ -1,6 +1,6 @@
 const addGoals = async (user_id, title, target_value, type) => {
     try {
-        const response = await fetch('http://localhost:5000/create/goal', {
+        const response = await fetch('https://tt-backend-jxc4.onrender.com/create/goal', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

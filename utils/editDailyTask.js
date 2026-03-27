@@ -1,6 +1,6 @@
 export const editDailyTask = async (userId, id, { title, date, completed }) => {
   try {
-    const response = await fetch(`http://localhost:5000/users/${userId}/daily_tasks/${id}`, {
+    const response = await fetch(`https://tt-backend-jxc4.onrender.com/users/${userId}/daily_tasks/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

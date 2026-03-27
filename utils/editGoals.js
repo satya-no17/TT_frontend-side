@@ -1,6 +1,6 @@
 const editGoals = async (userId, id, { current_value }) => {
   try {
-    const response = await fetch(`http://localhost:5000/users/${userId}/goals/${id}`, {
+    const response = await fetch(`https://tt-backend-jxc4.onrender.com/users/${userId}/goals/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

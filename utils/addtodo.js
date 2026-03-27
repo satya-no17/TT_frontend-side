@@ -1,6 +1,6 @@
 const addTodo = async (user_id, title, completed = false) => {
   try {
-    const response = await fetch('http://localhost:5000/create/todo', {
+    const response = await fetch('https://tt-backend-jxc4.onrender.com/create/todo', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

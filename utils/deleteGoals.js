@@ -1,7 +1,7 @@
 const deleteGoals = async(userId,Id)=>{
     try {
     const response = await fetch(
-      `http://localhost:5000/users/${userId}/goals/${Id}`,
+      `https://tt-backend-jxc4.onrender.com/users/${userId}/goals/${Id}`,
       {
         method: "DELETE",
       }

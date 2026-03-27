@@ -1,7 +1,7 @@
 const deleteDailyTask = async (userId, daily_tasksId) => {
   try {
     const response = await fetch(
-      `http://localhost:5000/users/${userId}/daily_tasks/${daily_tasksId}`,
+      `https://tt-backend-jxc4.onrender.com/users/${userId}/daily_tasks/${daily_tasksId}`,
       {
         method: "DELETE",
       }

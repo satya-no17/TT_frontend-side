@@ -1,6 +1,6 @@
 const retrieveData = async (userId) => {
   try {
-    const response = await fetch(`http://localhost:5000/users/${userId}/dashboard`)
+    const response = await fetch(`https://tt-backend-jxc4.onrender.com/users/${userId}/dashboard`)
 
     if (!response.ok) {
       const error = await response.json()

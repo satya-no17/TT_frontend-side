@@ -1,6 +1,6 @@
 export const editTodo = async (userId, id, { title, completed }) => {
   try {
-    const response = await fetch(`http://localhost:5000/users/${userId}/todos/${id}`, {
+    const response = await fetch(`https://tt-backend-jxc4.onrender.com/users/${userId}/todos/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

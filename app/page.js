@@ -32,7 +32,7 @@ const Home = () => {
   }
 
   useEffect(() => {
-    localStorage.removeItem('userId')
+
     const storedUserId = localStorage.getItem('userId')
     setUserId(storedUserId)
 

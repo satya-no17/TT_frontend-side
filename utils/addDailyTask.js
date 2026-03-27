@@ -14,7 +14,7 @@ const addDailyTask = async (user_id, title, completed = false) => {
         }
 
         console.log("SENDING:", payload)
-        const response = await fetch('http://localhost:5000/create/daily_task', {
+        const response = await fetch('https://tt-backend-jxc4.onrender.com/create/daily_task', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

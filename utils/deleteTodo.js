@@ -1,7 +1,7 @@
 const deleteTodo = async (userId, todoId) => {
   try {
     const response = await fetch(
-      `http://localhost:5000/users/${userId}/todos/${todoId}`,
+      `https://tt-backend-jxc4.onrender.com/users/${userId}/todos/${todoId}`,
       {
         method: "DELETE",
       }
