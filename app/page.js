@@ -51,6 +51,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-200">
+      {loading && <LoadingPage />}
 
       {/* HERO SECTION */}
       <div className="max-w-7xl mx-auto px-4 py-12 sm:py-16 grid md:grid-cols-2 gap-10 items-center">
