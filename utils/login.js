@@ -11,7 +11,7 @@ const login = async (username, password) => {
         })
         if (!res.ok) {
             const error = await res.json()
-            throw new error(error.error || 'failed to login')
+            throw new Error(error.error || 'failed to login')
         }
         const data = await res.json()
         return data

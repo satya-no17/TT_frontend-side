@@ -11,7 +11,7 @@ const register=async (username , hashpass ) =>{
         })
         if(!response.ok){
             const error = await response.json()
-            throw new error(error.error||'failed to create ')
+            throw new Error(error.error||'failed to create ')
         }
         const data = await response.json()
         return data

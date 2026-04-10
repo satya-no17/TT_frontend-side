@@ -2,16 +2,10 @@
 
 const addDailyTask = async (user_id, title, completed = false) => {
     try {
-        const now = new Date()
-
-        const formatted = new Date().toISOString().split('T')[0]
-
         const payload = {
-            user_id,
-            title,
-            completed,
-            date: formatted
-        }
+    user_id,
+    title
+}
 
         console.log("SENDING:", payload)
         const response = await fetch('https://tt-backend-jxc4.onrender.com/create/daily_task', {
@@ -23,7 +17,7 @@ const addDailyTask = async (user_id, title, completed = false) => {
         })
         if (!response.ok) {
             const error = await response.json()
-            throw new error(error.error || 'failed to create')
+            throw new Error(error.error || 'failed to create')
         }
         const data = await response.json()
         return data

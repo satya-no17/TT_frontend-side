@@ -5,7 +5,7 @@ export const editDailyTask = async (userId, id, { title, date, completed }) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ title, date, completed }),
+      body: JSON.stringify({ title, completed }),
     })
 
     if (!response.ok) {

@@ -163,6 +163,7 @@ const Tasks = () => {
       const userId = localStorage.getItem("userId")
 
       const res = await editDailyTask(userId, editingDaily.id, {
+        title: editDailyTitle,
         completed: editDailyCompleted
       })
 
@@ -170,7 +171,7 @@ const Tasks = () => {
         setDailyTasks(prev =>
           prev.map(task =>
             task.id === editingDaily.id
-              ?  { ...task, completed: editDailyCompleted }
+              ? { ...task, title: editDailyTitle, completed: editDailyCompleted }
               : task
           )
         )

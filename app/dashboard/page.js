@@ -89,6 +89,9 @@ const Main = () => {
 
   const totalDaily = dailyTasks.length
   const completedDaily = dailyTasks.filter(t => t.completed).length
+  const dailyPercent = totalDaily > 0 ? (completedDaily / totalDaily) * 100 : 0
+  const monthlyPercent = monthlyTarget > 0 ? (monthlyCurrent / monthlyTarget) * 100 : 0
+  const yearlyPercent = yearlyTarget > 0 ? (yearlyCurrent / yearlyTarget) * 100 : 0
 
   return (
     <div className="flex min-h-screen bg-[#F8FAFC]">
@@ -161,7 +164,7 @@ const Main = () => {
                 <p className="text-gray-500 text-sm">{completedDaily}/{totalDaily} Completed</p>
 
                 <div className="w-full bg-gray-200 h-2 rounded mt-2">
-                  <div className="bg-green-500 h-2  rounded" style={{ width: `${dailyTasks ? (completedDaily / totalDaily) * 100 : 0}%` }}></div>
+                  <div className="bg-green-500 h-2  rounded" style={{ width: `${dailyPercent}%` }}></div>
                 </div>
               </div>
 
@@ -170,7 +173,7 @@ const Main = () => {
                 <p className="text-gray-500 text-sm">{monthlyCurrent || 0}/{monthlyTarget} Completed</p>
 
                 <div className="w-full bg-gray-200 h-2 rounded mt-2">
-                  <div className="bg-blue-500 h-2  rounded" style={{ width: `${monthlyGoal ? (monthlyCurrent / monthlyTarget) * 100 : 0}%` }}></div>
+                  <div className="bg-blue-500 h-2  rounded" style={{ width: `${monthlyPercent}%` }}></div>
                 </div>
               </div>
 
@@ -179,7 +182,7 @@ const Main = () => {
                 <p className="text-gray-500 text-sm">{yearlyCurrent || 0}/{yearlyTarget} Completed</p>
 
                 <div className="w-full bg-gray-200 h-2 rounded mt-2">
-                  <div className="bg-yellow-500 h-2 rounded" style={{ width: `${yearlyGoal ? (yearlyCurrent / yearlyTarget) * 100 : 0}%` }}></div>
+                  <div className="bg-yellow-500 h-2 rounded" style={{ width: `${yearlyPercent}%` }}></div>
                 </div>
               </div>
 
@@ -226,10 +229,10 @@ const Main = () => {
                   <div className="h-8 flex items-end gap-1">
                     <div 
                       className="bg-green-500 flex-1 rounded transition-all duration-300" 
-                      style={{ height: `${totalDaily > 0 ? (completedDaily / totalDaily) * 100 : 0}%` }}
+                      style={{ height: `${dailyPercent}%` }}
                       title={`${completedDaily}/${totalDaily}`}
                     ></div>
-                    <span className="text-xs font-semibold">{totalDaily > 0 ? ((completedDaily / totalDaily) * 100).toFixed(0) : 0}%</span>
+                    <span className="text-xs font-semibold">{dailyPercent.toFixed(0)}%</span>
                   </div>
                 </div>
 
@@ -239,10 +242,10 @@ const Main = () => {
                   <div className="h-8 flex items-end gap-1">
                     <div 
                       className="bg-blue-500 flex-1 rounded transition-all duration-300" 
-                      style={{ height: `${monthlyTarget > 0 ? (monthlyCurrent / monthlyTarget) * 100 : 0}%` }}
+                      style={{ height: `${monthlyPercent}%` }}
                       title={`${monthlyCurrent}/${monthlyTarget}`}
                     ></div>
-                    <span className="text-xs font-semibold">{monthlyTarget > 0 ? ((monthlyCurrent / monthlyTarget) * 100).toFixed(0) : 0}%</span>
+                    <span className="text-xs font-semibold">{monthlyPercent.toFixed(0)}%</span>
                   </div>
                 </div>
 
@@ -252,10 +255,10 @@ const Main = () => {
                   <div className="h-8 flex items-end gap-1">
                     <div 
                       className="bg-yellow-500 flex-1 rounded transition-all duration-300" 
-                      style={{ height: `${yearlyTarget > 0 ? (yearlyCurrent / yearlyTarget) * 100 : 0}%` }}
+                      style={{ height: `${yearlyPercent}%` }}
                       title={`${yearlyCurrent}/${yearlyTarget}`}
                     ></div>
-                    <span className="text-xs font-semibold">{yearlyTarget > 0 ? ((yearlyCurrent / yearlyTarget) * 100).toFixed(0) : 0}%</span>
+                    <span className="text-xs font-semibold">{yearlyPercent.toFixed(0)}%</span>
                   </div>
                 </div>
               </div>
@@ -265,7 +268,7 @@ const Main = () => {
             {/* Goal Completion */}
             <div className="bg-white rounded-xl p-5 shadow-sm">
               <p className="text-gray-500 text-sm">Daily Goal Completion</p>
-              <p className="text-2xl font-bold">{((completedDaily / totalDaily) * 100).toFixed(1)}%</p>
+              <p className="text-2xl font-bold">{dailyPercent.toFixed(1)}%</p>
             </div>
 
             {/* Streak */}
