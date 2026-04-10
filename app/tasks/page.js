@@ -12,12 +12,12 @@ import addDailyTask from "@/utils/addDailyTask"
 import editGoals from "@/utils/editGoals"
 import deleteGoals from "@/utils/deleteGoals"
 import addGoals from "@/utils/addGoals"
-
+import LoadingPage from "@/app/components/LoadingPage"
 const Tasks = () => {
 
   const router = useRouter()
 
-
+  const [loading, setLoading] = useState(false)
   const [todos, setTodos] = useState([])
   const [addtodo, setaddtodo] = useState("")
   const [editTodoModal, setEditTodoModal] = useState(false)
@@ -47,6 +47,7 @@ const Tasks = () => {
   // adding todo
 
 const addTodos = async () => {
+  setLoading(true)
   try {
     const userId = localStorage.getItem("userId")
 
@@ -62,11 +63,11 @@ const addTodos = async () => {
 
   } catch (error) {
     console.error("Error adding todo:", error)
-  }
+  }setLoading(false)
 }
 
   // deleteing todo
-  const deleteTodos = async (id) => {
+  const deleteTodos = async (id) => {setLoading(true)
     try {
       const userId = localStorage.getItem("userId")
       const res = await deleteTodo(userId, id)
@@ -75,7 +76,7 @@ const addTodos = async () => {
 
     } catch (error) {
       console.error("Error deleting todo:", error)
-    }
+    }setLoading(false)
   }
   //editing todo
   const openEditModal = (todo) => {
@@ -85,7 +86,7 @@ const addTodos = async () => {
     setEditTodoModal(true)
   }
 
-  const updateTodo = async () => {
+  const updateTodo = async () => {setLoading(true)
     try {
       const userId = localStorage.getItem("userId")
       const res = await editTodo(userId, editingTodo.id, {
@@ -105,7 +106,7 @@ const addTodos = async () => {
       }
     } catch (error) {
       console.error("Error updating todo:", error)
-    }
+    }setLoading(false)
   }
 
 
@@ -113,7 +114,7 @@ const addTodos = async () => {
 
   // adding daily tasks
 
-const addDailyTasks = async () => {
+const addDailyTasks = async () => {setLoading(true)
   try {
     const userId = localStorage.getItem("userId")
 
@@ -128,11 +129,11 @@ const addDailyTasks = async () => {
     setShowDailyModal(false)
   } catch (error) {
     console.error("Error adding taskss:", error)
-  }
+  }setLoading(false)
 }
   // deleting daily tasks 
 
-  const deleteDailyTasks = async (id) => {
+  const deleteDailyTasks = async (id) => {setLoading(true)
     try {
       const userId = localStorage.getItem("userId")
       const res = await deleteDailyTask(userId, id)
@@ -140,7 +141,7 @@ const addDailyTasks = async () => {
       setDailyTasks(prev => prev.filter(tasks => tasks.id !== id))
     } catch (error) {
       console.error("Error deleting dailyTask:", error)
-    }
+    }setLoading(false)
   }
 
   //edit daily tasks
@@ -152,7 +153,7 @@ const addDailyTasks = async () => {
     setEditDailyModal(true)
   }
 
-  const updateDailyTasks = async () => {
+  const updateDailyTasks = async () => {setLoading(true)
     try {
       const userId = localStorage.getItem("userId")
 
@@ -177,12 +178,12 @@ const addDailyTasks = async () => {
       }
     } catch (err) {
       console.error(err)
-    }
+    }setLoading(false)
   }
 
   // goals 
   // adding goals
-  const handleAddGoal = async (title, target_value, type) => {
+  const handleAddGoal = async (title, target_value, type) => {setLoading(true)
     try {
       const userId = localStorage.getItem("userId")
 
@@ -193,7 +194,7 @@ console.log("MESSAGE:", res?.message || "No message from backend")
       setGoals(prev => [...prev, res.goal])
     } catch (err) {
       console.error(err)
-    }
+    }setLoading(false)
   }
 
   // update goals 
@@ -202,7 +203,7 @@ console.log("MESSAGE:", res?.message || "No message from backend")
     setEditGoalValue(goal.current_value)
     setEditGoalModal(true)
   }
-  const updateGoal = async () => {
+  const updateGoal = async () => {setLoading(true)
     try {
       const userId = localStorage.getItem("userId")
 
@@ -224,9 +225,9 @@ console.log("MESSAGE:", res?.message || "No message from backend")
       }
     } catch (err) {
       console.error(err)
-    }
+    }setLoading(false)
   }
-  const handleIncrement = async (goal) => {
+  const handleIncrement = async (goal) => {setLoading(true)
     try {
       const userId = localStorage.getItem("userId")
       const updatedValue = goal.current_value + 1
@@ -248,11 +249,11 @@ console.log("MESSAGE:", res?.message || "No message from backend")
       }
     } catch (err) {
       console.error(err)
-    }
+    }setLoading(false)
   }
   // delete goals
 
-  const handleDeleteGoal = async (id) => {
+  const handleDeleteGoal = async (id) => {setLoading(true)
     try {
       const userId = localStorage.getItem("userId")
 
@@ -263,7 +264,7 @@ console.log("MESSAGE:", res?.message || "No message from backend")
 console.log(res.message || "Goal deleted")
     } catch (err) {
       console.error(err)
-    }
+    }setLoading(false)
   }
 
 
@@ -279,7 +280,7 @@ console.log(res.message || "Goal deleted")
       router.push("/")
       return
     }
-    const loadDashboard = async () => {
+    const loadDashboard = async () => {setLoading(true)
       try {
         const res = await retrieveData(userId)
         console.log("dashboard data:", res)
@@ -288,7 +289,7 @@ console.log(res.message || "Goal deleted")
         setTodos(res.todos)
       } catch (err) {
         console.error(err)
-      }
+      }setLoading(false)
     }
 
 
@@ -437,6 +438,7 @@ console.log(res.message || "Goal deleted")
   }
   return (
     <>
+      {loading && <LoadingPage />}
       {editGoalModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
           <div className="bg-white p-6 rounded-xl w-[400px]">

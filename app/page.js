@@ -5,10 +5,11 @@ import { Button } from '@/components/ui/button'
 import register from '@/utils/register'
 import login from '@/utils/login'
 import Image from 'next/image'
+import LoadingPage from './components/LoadingPage'
 
 const Home = () => {
   const router = useRouter()
-
+  const [loading,setLoading]= useState(false)
   const [username, setUsername] = useState('')
   const [hashpass, setHashpass] = useState('')
   const [userId, setUserId] = useState(null)
@@ -17,17 +18,23 @@ const Home = () => {
     e.preventDefault()
 
     const action = e.nativeEvent.submitter.value
+    setLoading(true)
+    
+    try {
+      if (action === "login") {
+        const res = await login(username, hashpass)
+        localStorage.setItem('userId', res.user.id)
+        router.push('/dashboard')
+      }
 
-    if (action === "login") {
-      const res = await login(username, hashpass)
-      localStorage.setItem('userId', res.user.id)
-      router.push('/dashboard')
-    }
-
-    if (action === "register") {
-      const res = await register(username, hashpass)
-      localStorage.setItem('userId', res.userId)
-      router.push('/dashboard')
+      if (action === "register") {
+        const res = await register(username, hashpass)
+        localStorage.setItem('userId', res.userId)
+        router.push('/dashboard')
+      }
+    } catch (error) {
+      console.error('Auth error:', error)
+      setLoading(false)
     }
   }
 
@@ -38,11 +45,13 @@ const Home = () => {
 
     if (storedUserId) {
       router.push('/dashboard')
+     
     }
   }, [router])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-200">
+      {loading && <LoadingPage />}
 
       {/* HERO SECTION */}
       <div className="max-w-7xl mx-auto px-4 py-12 sm:py-16 grid md:grid-cols-2 gap-10 items-center">

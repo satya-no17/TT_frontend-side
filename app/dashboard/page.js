@@ -5,10 +5,10 @@ import React, { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { useRouter } from 'next/navigation'
 import retrieveData from '@/utils/retrieveData'
-
+import LoadingPage from '../components/LoadingPage'
 
 const Main = () => {
-
+  const [loading, setLoading] = useState(false)
   const [todos, setTodos] = useState([])
   const [dailyTasks, setDailyTasks] = useState([])
   const [goals, setGoals] = useState([])
@@ -30,6 +30,7 @@ const Main = () => {
       return
     }
     const loadDashboard = async () => {
+      setLoading(true)
       try {
         const res = await retrieveData(userId)
         console.log("dashboard data:", res)
@@ -39,41 +40,42 @@ const Main = () => {
       } catch (err) {
         console.error(err)
       }
+      setLoading(false)
     }
 
     loadDashboard()
   }, [])
 
   useEffect(() => {
-  console.log("Updated todos:", todos)
-  console.log("Updated dailyTasks:", dailyTasks)
-  console.log("Updated goals:", goals)
-}, [todos, dailyTasks, goals])
+    console.log("Updated todos:", todos)
+    console.log("Updated dailyTasks:", dailyTasks)
+    console.log("Updated goals:", goals)
+  }, [todos, dailyTasks, goals])
 
 
-// to calculate the progress
-const monthlyGoal = goals.filter(g => g.type === 'monthly')
-const yearlyGoal = goals.filter(g => g.type === 'yearly')
+  // to calculate the progress
+  const monthlyGoal = goals.filter(g => g.type === 'monthly')
+  const yearlyGoal = goals.filter(g => g.type === 'yearly')
 
-const monthlyTarget = monthlyGoal.reduce(
-  (sum,g)=> sum +g.target_value, 0
-)
-const monthlyCurrent = monthlyGoal.reduce(
-  (sum,g)=> sum +g.current_value, 0
-)
-const yearlyTarget = yearlyGoal.reduce(
-  (sum,g)=> sum +g.target_value, 0
-)
-const yearlyCurrent = yearlyGoal.reduce(
-  (sum,g)=> sum +g.current_value, 0
-)
+  const monthlyTarget = monthlyGoal.reduce(
+    (sum, g) => sum + g.target_value, 0
+  )
+  const monthlyCurrent = monthlyGoal.reduce(
+    (sum, g) => sum + g.current_value, 0
+  )
+  const yearlyTarget = yearlyGoal.reduce(
+    (sum, g) => sum + g.target_value, 0
+  )
+  const yearlyCurrent = yearlyGoal.reduce(
+    (sum, g) => sum + g.current_value, 0
+  )
 
-const totalDaily = dailyTasks.length
-const completedDaily = dailyTasks.filter(t => t.completed).length
+  const totalDaily = dailyTasks.length
+  const completedDaily = dailyTasks.filter(t => t.completed).length
 
   return (
     <div className="flex min-h-screen bg-[#F8FAFC]">
-
+      {loading && <LoadingPage />}
       {/* Sidebar */}
       <div className="
         w-[70px] 
@@ -142,16 +144,16 @@ const completedDaily = dailyTasks.filter(t => t.completed).length
                 <p className="text-gray-500 text-sm">{completedDaily}/{totalDaily} Completed</p>
 
                 <div className="w-full bg-gray-200 h-2 rounded mt-2">
-                  <div className="bg-green-500 h-2  rounded" style={{width:`${dailyTasks?(completedDaily/totalDaily)*100:0}%`}}></div>
+                  <div className="bg-green-500 h-2  rounded" style={{ width: `${dailyTasks ? (completedDaily / totalDaily) * 100 : 0}%` }}></div>
                 </div>
               </div>
 
               <div className="bg-white rounded-xl p-5 shadow-sm">
                 <p className="font-semibold text-lg sm:text-xl">Monthly Goals</p>
-                <p className="text-gray-500 text-sm">{monthlyCurrent ||0}/{monthlyTarget} Completed</p>
+                <p className="text-gray-500 text-sm">{monthlyCurrent || 0}/{monthlyTarget} Completed</p>
 
                 <div className="w-full bg-gray-200 h-2 rounded mt-2">
-                  <div className="bg-blue-500 h-2  rounded"  style={{width:`${ monthlyGoal?(monthlyCurrent/monthlyTarget)*100:0}%`}}></div>
+                  <div className="bg-blue-500 h-2  rounded" style={{ width: `${monthlyGoal ? (monthlyCurrent / monthlyTarget) * 100 : 0}%` }}></div>
                 </div>
               </div>
 
@@ -160,7 +162,7 @@ const completedDaily = dailyTasks.filter(t => t.completed).length
                 <p className="text-gray-500 text-sm">{yearlyCurrent || 0}/{yearlyTarget} Completed</p>
 
                 <div className="w-full bg-gray-200 h-2 rounded mt-2">
-                  <div className="bg-yellow-500 h-2 rounded" style={{width:`${ yearlyGoal? (yearlyCurrent/yearlyTarget)*100:0}%`}}></div>
+                  <div className="bg-yellow-500 h-2 rounded" style={{ width: `${yearlyGoal ? (yearlyCurrent / yearlyTarget) * 100 : 0}%` }}></div>
                 </div>
               </div>
 
@@ -176,16 +178,16 @@ const completedDaily = dailyTasks.filter(t => t.completed).length
 
               </div>
 
-            <div className="flex flex-col gap-3" onClick={taskpage}>
+              <div className="flex flex-col gap-3" onClick={taskpage}>
 
-{dailyTasks.map((task) => (
-  <div key={task.id} className="flex items-center gap-3 text-base sm:text-lg">
-    <input type="checkbox" checked={task.completed} readOnly />
-    <p>{task.title}</p>
-  </div>
-))}
+                {dailyTasks.map((task) => (
+                  <div key={task.id} className="flex items-center gap-3 text-base sm:text-lg">
+                    <input type="checkbox" checked={task.completed} readOnly />
+                    <p>{task.title}</p>
+                  </div>
+                ))}
 
-</div>
+              </div>
             </div>
 
           </div>
@@ -215,7 +217,7 @@ const completedDaily = dailyTasks.filter(t => t.completed).length
             {/* Goal Completion */}
             <div className="bg-white rounded-xl p-5 shadow-sm">
               <p className="text-gray-500 text-sm">Daily Goal Completion</p>
-              <p className="text-2xl font-bold">{((completedDaily/totalDaily)*100).toFixed(1)}%</p>
+              <p className="text-2xl font-bold">{((completedDaily / totalDaily) * 100).toFixed(1)}%</p>
             </div>
 
             {/* Streak */}
