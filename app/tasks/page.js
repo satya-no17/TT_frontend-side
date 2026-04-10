@@ -170,7 +170,7 @@ const Tasks = () => {
         setDailyTasks(prev =>
           prev.map(task =>
             task.id === editingDaily.id
-              ? res.task
+              ?  { ...task, completed: editDailyCompleted }
               : task
           )
         )
@@ -337,8 +337,8 @@ const Tasks = () => {
 
         <div className="flex flex-col gap-3">
 
-          {items.map(item => {
-            const isGoal = item.target_value !== undefined
+          {items?.map(item => {
+            const isGoal = item && item.target_value !== undefined
             const key = `${title}-${item?.id}`
 
             return (
