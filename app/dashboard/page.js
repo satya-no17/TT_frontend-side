@@ -12,7 +12,21 @@ const Main = () => {
   const [todos, setTodos] = useState([])
   const [dailyTasks, setDailyTasks] = useState([])
   const [goals, setGoals] = useState([])
+  const [dailyMotivation, setDailyMotivation] = useState('')
   const router = useRouter()
+
+  const motivations = [
+    "Every small step counts. Keep going! 🚀",
+    "Consistency is the key to success. You're doing great! 💪",
+    "Progress over perfection. Celebrate today's wins! 🎉",
+    "The only way to do great work is to love what you do. 💖",
+    "You are capable of amazing things. Believe in yourself! 🌟",
+    "Today is a fresh start. Make it count! 🌅",
+    "Success is the sum of small efforts. You've got this! 🔥",
+    "Dream big, work hard, stay focused! 👀",
+    "Your potential is limitless. Go achieve it! ⚡",
+    "Remember why you started. Keep pushing! 💯"
+  ]
   const taskpage = () => {
     router.push('/tasks')
   }
@@ -37,6 +51,9 @@ const Main = () => {
         setDailyTasks(res.dailyTasks)
         setGoals(res.goals)
         setTodos(res.todos)
+        // Set random daily motivation
+        const randomMotivation = motivations[Math.floor(Math.random() * motivations.length)]
+        setDailyMotivation(randomMotivation)
       } catch (err) {
         console.error(err)
       }
@@ -202,14 +219,45 @@ const Main = () => {
                 Your Progress
               </p>
 
-              <div className="h-40 flex items-end gap-2">
+              <div className="space-y-4">
+                {/* Daily Progress */}
+                <div>
+                  <p className="text-sm text-gray-600 mb-2">Daily Tasks</p>
+                  <div className="h-8 flex items-end gap-1">
+                    <div 
+                      className="bg-green-500 flex-1 rounded transition-all duration-300" 
+                      style={{ height: `${totalDaily > 0 ? (completedDaily / totalDaily) * 100 : 0}%` }}
+                      title={`${completedDaily}/${totalDaily}`}
+                    ></div>
+                    <span className="text-xs font-semibold">{totalDaily > 0 ? ((completedDaily / totalDaily) * 100).toFixed(0) : 0}%</span>
+                  </div>
+                </div>
 
-                <div className="bg-blue-500 w-5 sm:w-6 h-[40%] rounded"></div>
-                <div className="bg-blue-500 w-5 sm:w-6 h-[60%] rounded"></div>
-                <div className="bg-blue-500 w-5 sm:w-6 h-[80%] rounded"></div>
-                <div className="bg-blue-500 w-5 sm:w-6 h-[50%] rounded"></div>
-                <div className="bg-blue-500 w-5 sm:w-6 h-[90%] rounded"></div>
+                {/* Monthly Progress */}
+                <div>
+                  <p className="text-sm text-gray-600 mb-2">Monthly Goals</p>
+                  <div className="h-8 flex items-end gap-1">
+                    <div 
+                      className="bg-blue-500 flex-1 rounded transition-all duration-300" 
+                      style={{ height: `${monthlyTarget > 0 ? (monthlyCurrent / monthlyTarget) * 100 : 0}%` }}
+                      title={`${monthlyCurrent}/${monthlyTarget}`}
+                    ></div>
+                    <span className="text-xs font-semibold">{monthlyTarget > 0 ? ((monthlyCurrent / monthlyTarget) * 100).toFixed(0) : 0}%</span>
+                  </div>
+                </div>
 
+                {/* Yearly Progress */}
+                <div>
+                  <p className="text-sm text-gray-600 mb-2">Yearly Goals</p>
+                  <div className="h-8 flex items-end gap-1">
+                    <div 
+                      className="bg-yellow-500 flex-1 rounded transition-all duration-300" 
+                      style={{ height: `${yearlyTarget > 0 ? (yearlyCurrent / yearlyTarget) * 100 : 0}%` }}
+                      title={`${yearlyCurrent}/${yearlyTarget}`}
+                    ></div>
+                    <span className="text-xs font-semibold">{yearlyTarget > 0 ? ((yearlyCurrent / yearlyTarget) * 100).toFixed(0) : 0}%</span>
+                  </div>
+                </div>
               </div>
 
             </div>
@@ -221,9 +269,9 @@ const Main = () => {
             </div>
 
             {/* Streak */}
-            <div className="bg-white rounded-xl p-5 shadow-sm">
-              <p className="text-gray-500 text-sm">Longest Streak</p>
-              <p className="text-2xl font-bold">12 Days</p>
+            <div className="bg-gradient-to-br from-purple-100 to-blue-100 rounded-xl p-5 shadow-sm border border-purple-200">
+              <p className="text-gray-700 text-sm font-semibold mb-3">💡 Daily Motivation</p>
+              <p className="text-lg font-semibold text-slate-800 leading-relaxed">{dailyMotivation}</p>
             </div>
 
           </div>
