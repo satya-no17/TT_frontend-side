@@ -161,6 +161,7 @@ const Tasks = () => {
     setLoading(true)
     try {
       const userId = localStorage.getItem("userId")
+      
       const res = await editDailyTask(userId, editingDaily.id, {
         title: editDailyTitle,
         completed: editDailyCompleted

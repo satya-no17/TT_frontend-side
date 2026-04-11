@@ -30,20 +30,7 @@ const Main = () => {
   const taskpage = () => {
     router.push('/tasks')
   }
-
-  useEffect(() => {
-
-    // Check if running on client-side
-    if (typeof window === 'undefined') return
-
-    const userId = localStorage.getItem("userId")
-    console.log("userId:", userId)
-
-    if (!userId) {
-      router.push("/")
-      return
-    }
-    const loadDashboard = async () => {
+  const loadDashboard = async (userId) => {
       setLoading(true)
       try {
         const res = await retrieveData(userId)
@@ -60,7 +47,21 @@ const Main = () => {
       setLoading(false)
     }
 
-    loadDashboard()
+  useEffect(() => {
+
+    // Check if running on client-side
+    if (typeof window === 'undefined') return
+
+    const userId = localStorage.getItem("userId")
+    console.log("userId:", userId)
+
+    if (!userId) {
+      router.push("/")
+      return
+    }
+    
+
+    loadDashboard(userId)
   }, [])
 
   useEffect(() => {
@@ -130,7 +131,6 @@ const Main = () => {
             <span className="hidden lg:inline">Tasks</span>
             <span className="lg:hidden">T</span>
           </div>
-
         </div>
 
       </div>
@@ -143,6 +143,7 @@ const Main = () => {
           <p className="text-xl sm:text-2xl font-semibold">
             Welcome Back, User
           </p>
+          <Button size='sm' onClick={()=>{localStorage.removeItem('userId');router.push("/")}}>LogOut</Button>
         </div>
 
         {/* Dashboard Content */}
@@ -222,8 +223,8 @@ const Main = () => {
                 <div>
                   <p className="text-sm text-gray-600 mb-2">Daily Tasks</p>
                   <div className="h-8 flex items-end gap-1">
-                    <div 
-                      className="bg-green-500 flex-1 rounded transition-all duration-300" 
+                    <div
+                      className="bg-green-500 flex-1 rounded transition-all duration-300"
                       style={{ height: `${dailyPercent}%` }}
                       title={`${completedDaily}/${totalDaily}`}
                     ></div>
@@ -235,8 +236,8 @@ const Main = () => {
                 <div>
                   <p className="text-sm text-gray-600 mb-2">Monthly Goals</p>
                   <div className="h-8 flex items-end gap-1">
-                    <div 
-                      className="bg-blue-500 flex-1 rounded transition-all duration-300" 
+                    <div
+                      className="bg-blue-500 flex-1 rounded transition-all duration-300"
                       style={{ height: `${monthlyPercent}%` }}
                       title={`${monthlyCurrent}/${monthlyTarget}`}
                     ></div>
@@ -248,8 +249,8 @@ const Main = () => {
                 <div>
                   <p className="text-sm text-gray-600 mb-2">Yearly Goals</p>
                   <div className="h-8 flex items-end gap-1">
-                    <div 
-                      className="bg-yellow-500 flex-1 rounded transition-all duration-300" 
+                    <div
+                      className="bg-yellow-500 flex-1 rounded transition-all duration-300"
                       style={{ height: `${yearlyPercent}%` }}
                       title={`${yearlyCurrent}/${yearlyTarget}`}
                     ></div>
