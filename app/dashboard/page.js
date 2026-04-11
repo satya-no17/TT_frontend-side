@@ -131,11 +131,6 @@ const Main = () => {
             <span className="lg:hidden">T</span>
           </div>
 
-          <div className="p-2 rounded-lg hover:bg-[#334155] cursor-pointer text-center lg:text-left">
-            <span className="hidden lg:inline">Stats</span>
-            <span className="lg:hidden">S</span>
-          </div>
-
         </div>
 
       </div>
