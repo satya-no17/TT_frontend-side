@@ -31,21 +31,21 @@ const Main = () => {
     router.push('/tasks')
   }
   const loadDashboard = async (userId) => {
-      setLoading(true)
-      try {
-        const res = await retrieveData(userId)
-        console.log("dashboard data:", res)
-        setDailyTasks(res.dailyTasks)
-        setGoals(res.goals)
-        setTodos(res.todos)
-        // Set random daily motivation
-        const randomMotivation = motivations[Math.floor(Math.random() * motivations.length)]
-        setDailyMotivation(randomMotivation)
-      } catch (err) {
-        console.error(err)
-      }
-      setLoading(false)
+    setLoading(true)
+    try {
+      const res = await retrieveData(userId)
+      console.log("dashboard data:", res)
+      setDailyTasks(res.dailyTasks)
+      setGoals(res.goals)
+      setTodos(res.todos)
+      // Set random daily motivation
+      const randomMotivation = motivations[Math.floor(Math.random() * motivations.length)]
+      setDailyMotivation(randomMotivation)
+    } catch (err) {
+      console.error(err)
     }
+    setLoading(false)
+  }
 
   useEffect(() => {
 
@@ -59,7 +59,7 @@ const Main = () => {
       router.push("/")
       return
     }
-    
+
 
     loadDashboard(userId)
   }, [])
@@ -143,7 +143,14 @@ const Main = () => {
           <p className="text-xl sm:text-2xl font-semibold">
             Welcome Back, User
           </p>
-          <Button size='sm' onClick={()=>{localStorage.removeItem('userId');router.push("/")}}>LogOut</Button>
+          <Button size='sm' onClick={() => {
+            setLoading(true)
+            localStorage.removeItem('userId');
+            router.push("/")
+            setLoading(false)
+          }}>
+            LogOut
+          </Button>
         </div>
 
         {/* Dashboard Content */}
