@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Trackly 🚀
+
+> **Stay Consistent. Build Momentum.**
+
+Trackly is a productivity web app that helps you track daily tasks, monitor goals, and build habits that actually stick — simple, focused, and designed for real progress.
+
+🔗 **Live Demo:** [trackly-kappa-coral.vercel.app](https://trackly-kappa-coral.vercel.app)
+
+![Trackly Screenshot](https://github.com/user-attachments/assets/999326c4-5330-49b2-9d80-4c69372a0886)
+
+---
+
+## Features
+
+- ✅ **Daily Task Tracking** — Mark tasks as complete and see your daily progress at a glance
+- 🎯 **Goal Management** — Set and track daily, monthly, and yearly goals with visual progress bars
+- 📊 **Progress Dashboard** — See all your progress in one clean, focused view
+- 💡 **Daily Motivation** — Get a fresh motivational quote every time you open the app
+- 🔐 **Auth System** — Register and login securely; sessions persisted via localStorage
+- 📱 **Responsive Design** — Works seamlessly on mobile, tablet, and desktop
+
+---
+
+## Tech Stack
+
+| Layer | Tech |
+|---|---|
+| Framework | [Next.js 14](https://nextjs.org) (App Router) |
+| Styling | [Tailwind CSS](https://tailwindcss.com) |
+| UI Components | [shadcn/ui](https://ui.shadcn.com) |
+| Icons | [Lucide React](https://lucide.dev) |
+| Deployment | [Vercel](https://vercel.com) |
+| Language | JavaScript (93.5%) |
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm / yarn / pnpm
+
+### Installation
 
 ```bash
+# Clone the repo
+git clone https://github.com/satya-no17/TT_frontend-side.git
+cd TT_frontend-side
+
+# Install dependencies
+npm install
+
+# Run the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+```
+TT_frontend-side/
+├── app/                  # Next.js App Router pages
+│   ├── dashboard/        # Main dashboard page
+│   ├── tasks/            # Tasks management page
+│   └── components/       # Shared components (LoadingPage, etc.)
+├── components/
+│   └── ui/               # shadcn/ui components
+├── utils/                # Utility functions
+│   ├── login.js          # Login API call
+│   ├── register.js       # Register API call
+│   ├── retrieveData.js   # Fetch dashboard data
+│   └── logout.js         # Logout helper
+├── lib/                  # Helper libraries
+└── public/               # Static assets (logo, etc.)
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## How It Works
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Register / Login** — Create an account or log in with your username and password
+2. **Dashboard** — View your daily tasks, goal progress, and motivation for the day
+3. **Tasks Page** — Manage your daily tasks and goals, mark them as complete
+4. **Progress Tracking** — Daily, monthly, and yearly goals are tracked with live progress bars
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is deployed on **Vercel**. To deploy your own fork:
+
+1. Push your code to GitHub
+2. Import the repo on [vercel.com](https://vercel.com)
+3. Vercel auto-detects Next.js and deploys instantly
+
+---
+
+## Author
+
+Built by **Satya** — [@satya-no17](https://github.com/satya-no17)
+
+---
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
